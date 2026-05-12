@@ -11,5 +11,10 @@
     <% if (locals.currentUser) { %>
      <div><%= `${currentUser.firstName} ${currentUser.lastName}` %></div>
     <% } %>
+
+    <form action="/uploadFile" enctype="multipart/form-data" method="post">
+        <input type="file" name="uploadedFile" id="uploadedFile" required>
+        <button type="submit">Upload</button>
+    </form>
 </body>
 </html>
