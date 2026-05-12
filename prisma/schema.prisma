@@ -20,9 +20,36 @@ model Session {
 }
 
 model User {
-  userId    String @id @default(uuid())
-  email     String @unique
+  userId    String   @id @default(uuid())
+  email     String   @unique
   password  String
   firstName String
   lastName  String
+  folders   Folder[]
+  files     File[]
+}
+
+model Folder {
+  folderId   String   @id @default(uuid())
+  folderName String
+  createdAt  DateTime @default(now())
+  owner      User     @relation(fields: [ownerId], references: [userId])
+  ownerId    String
+  files      File[]
+
+  @@unique([ownerId, folderName])
+}
+
+model File {
+  fileId     String   @id @default(uuid())
+  fileName   String
+  uploadedAt DateTime @default(now())
+
+  owner   User   @relation(fields: [ownerId], references: [userId])
+  ownerId String
+
+  folder   Folder? @relation(fields: [folderId], references: [folderId])
+  folderId String
+
+  @@unique([folderId, fileName])
 }
