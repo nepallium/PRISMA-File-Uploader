@@ -1,17 +1,18 @@
 import express from "express";
 import "dotenv/config";
 import path from "path";
-import pool from "./db/pool.js";
 
-import session from "express-session";
-import flash from "connect-flash";
+import expressSession from "express-session";
+import prisma from "./config/prisma.js";
+import { PrismaSessionStore } from "@quixo3/prisma-session-store";
+
 import passport from "passport";
-import pgSimple from "connect-pg-simple";
-const pgSession = pgSimple(session);
+import flash from"connect-flash";
+// import pgSimple from "connect-pg-simple";
+// const pgSession = pgSimple(expressSession);
 
+import indexRouter from "./routes/indexRouter.js"
 import authRouter from "./routes/authRouter.js";
-import msgRouter from "./routes/messageRouter.js";
-import memberRouter from "./routes/memberRouter.js";
 
 // ### general setup
 const app = express();
@@ -23,21 +24,25 @@ app.use(express.static(assetsPath));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-// ### session setup
-const sessionStore = new pgSession({ pool });
-
 app.use(
-  session({
-    store: sessionStore,
+  expressSession({
+    store: new PrismaSessionStore(prisma,
+      {
+        checkPeriod: 2 * 60 * 1000,
+        dbRecordIdIsSessionId: true,
+        dbRecordIdFunction: undefined,
+      }
+    ),
     secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
     cookie: {
       maxAge: 24 * 60 * 60 * 1000, // 1 day
+      
     },
   }),
 );
-app.use(flash()); // for req.flash()
+app.use(flash()) // for req.flash()
 
 // ### passport authentication
 import "./config/passport.js"; // need to import passport config so app.js knows abt it
@@ -57,9 +62,8 @@ app.use((req, res, next) => {
 });
 
 // routes
+app.use(indexRouter)
 app.use(authRouter);
-app.use(msgRouter);
-app.use("/member", memberRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, (error) => {
