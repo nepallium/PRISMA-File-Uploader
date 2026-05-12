@@ -1,0 +1,11 @@
+<header>
+    <h1><a href="/">File Uploader</a></h1>
+    <div class="buttons">
+        <% if (locals.currentUser) { %>
+         <form action="/logout" method="post"><button type="submit">Log Out</button></form>
+        <% } else { %>
+            <a href="/signup">Sign up</a>
+            <a href="/login">Log in</a>
+        <% } %>
+    </div>
+</header>
