@@ -1,20 +1,20 @@
 import bcrypt from "bcrypt";
 import crypto from "node:crypto";
 import { body, validationResult, matchedData } from "express-validator";
-import * as db from "../db/queries.js";
 import passport from "passport";
+import * as db from "../db/queries.js"
 
 const alphaErr = "must only contain letters.";
 const lengthErr = "must be between 1 and 16 characters";
 
 const validateUser = [
-  body("first_name")
+  body("firstName")
     .trim()
     .isAlpha()
     .withMessage(`First name ${alphaErr}`)
     .isLength({ min: 1, max: 16 })
     .withMessage(`First name ${lengthErr}`),
-  body("last_name")
+  body("lastName")
     .trim()
     .isAlpha()
     .withMessage(`Last name ${alphaErr}`)
@@ -49,7 +49,7 @@ export const createUser = [
       formData.password = hashedPw;
 
       // db returns new user obj
-      const newUser = await db.createUser(formData);
+      const newUser = db.createUser(formData);
       // manually log user in
       req.login(newUser, (err) => {
         if (err) {
