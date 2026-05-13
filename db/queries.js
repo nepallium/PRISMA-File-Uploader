@@ -19,3 +19,12 @@ export async function isEmailAvailable(value) {
 
   return true
 }
+
+export async function createFolder(data) {
+  const folder = await prisma.folder.create({
+        data: {
+            folderName: data.folderName,
+            ownerId: data.ownerId
+        }
+    })
+}

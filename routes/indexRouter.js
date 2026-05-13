@@ -9,4 +9,6 @@ router.get("/", (req, res) => {
 
 router.post("/uploadFile", controller.uploadFile)
 
+router.post("/createFolder", controller.createFolder)
+
 export default router

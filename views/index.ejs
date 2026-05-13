@@ -9,12 +9,28 @@
 <body>
     <%- include('partials/header.ejs') %>
     <% if (locals.currentUser) { %>
-     <div><%= `${currentUser.firstName} ${currentUser.lastName}` %></div>
+        <button onclick="createFolderModal.showModal()">Create folder</button>
+        <dialog id="createFolderModal" class="modal">
+            <h3>New Folder</h3>
+            <%- include('partials/errors') %>
+            <form action="/createFolder" method="post">
+                <label for="folderName">Folder Name</label>
+                <input type="text" name="folderName" id="folderName" required>
+                
+                <div class="actions">
+                    <button onclick="createFolderModal.close()">Cancel</button>
+                    <button type="submit">Add</button>
+                </div>
+            </form>
+        </dialog>
+
+        <form action="/uploadFile" enctype="multipart/form-data" method="post">
+            <input type="file" name="uploadedFile" id="uploadedFile" required>
+            <button type="submit">Upload</button>
+        </form>
+    <% } else { %>
+        Please <a href="/signup">Sign up</a> or <a href="/login">Log in</a>
     <% } %>
 
-    <form action="/uploadFile" enctype="multipart/form-data" method="post">
-        <input type="file" name="uploadedFile" id="uploadedFile" required>
-        <button type="submit">Upload</button>
-    </form>
 </body>
 </html>
