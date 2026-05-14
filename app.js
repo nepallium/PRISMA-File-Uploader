@@ -61,7 +61,7 @@ import authRouter from "./routes/authRouter.js";
 import folderRouter from "./routes/folderRouter.js";
 app.use(indexRouter);
 app.use(authRouter);
-app.use(folderRouter);
+app.use('/folder', folderRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, (error) => {

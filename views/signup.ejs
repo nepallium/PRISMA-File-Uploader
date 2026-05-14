@@ -1,28 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="style.css">
-  <title>Sign Up</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-  <%- include('partials/header.ejs') %>
-  <h3>Sign Up</h3>
-  <%- include('partials/errors.ejs') %>
-  <form action="/signup" method="POST">
-    <label for="firstName">First Name</label>
-    <input type="text" name="firstName" id="firstName" required>
-    <label for="lastName">Last Name</label>
-    <input type="text" name="lastName" id="lastName" required>
-    <label for="email">Email</label>
-    <input id="email" name="email" type="text"  required/>
-    <label for="password">Password</label>
-    <input id="password" name="password" type="password"  required/>
-    <button type="submit">Sign Up</button>
-  </form>
-</body>
-
+  <body>
+    <%- include('partials/header.ejs') %>
+    <h3>Sign Up</h3>
+    <%- include('partials/errors.ejs') %>
+    <form action="/signup" method="POST">
+      <label for="firstName">First Name</label>
+      <input type="text" name="firstName" id="firstName" required />
+      <label for="lastName">Last Name</label>
+      <input type="text" name="lastName" id="lastName" required />
+      <label for="email">Email</label>
+      <input id="email" name="email" type="text" required />
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" required />
+      <button type="submit">Sign Up</button>
+    </form>
+  </body>
 </html>

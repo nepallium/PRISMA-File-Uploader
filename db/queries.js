@@ -20,15 +20,6 @@ export async function isEmailAvailable(value) {
   return true;
 }
 
-export async function createFolder(data) {
-  const folder = await prisma.folder.create({
-    data: {
-      folderName: data.folderName,
-      ownerId: data.ownerId,
-    },
-  });
-}
-
 export async function getAllFolders() {
   const folders = await prisma.folder.findMany({
     orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
@@ -38,20 +29,57 @@ export async function getAllFolders() {
 }
 
 export async function getOneFolder(data) {
-  const folder = await prisma.folder.upsert({
-    where: {
-      ownerId_folderName: {
+  let folder;
+
+  if (data.folderName === "/") {
+    folder = await prisma.folder.upsert({
+      where: {
+        ownerId_folderName: {
+          ownerId: data.ownerId,
+          folderName: data.folderName,
+        },
+      },
+      update: {},
+      create: {
+        ownerId: data.ownerId,
+        folderName: data.folderName,
+        priority: 1,
+      },
+    });
+  } else {
+    folder = await prisma.folder.findFirst({
+      where: {
         ownerId: data.ownerId,
         folderName: data.folderName,
       },
-    },
-    update: {},
-    create: {
-      ownerId: data.ownerId,
-      folderName: data.folderName,
-      priority: 1,
-    },
-  });
+    });
+  }
 
   return folder;
+}
+
+export async function createFolder(data) {
+  const folder = await prisma.folder.create({
+    data: {
+      folderName: data.folderName,
+      ownerId: data.ownerId,
+    },
+  });
+}
+
+export async function deleteFolder(folderId) {
+  await prisma.folder.delete({
+    where: {
+      folderId,
+    },
+  });
+}
+
+export async function updateFolder(folderId, newName) {
+  const updated = await prisma.folder.update({
+    where: { folderId },
+    data: { folderName: newName },
+  });
+
+  return updated;
 }

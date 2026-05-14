@@ -35,7 +35,7 @@ main {
   padding-bottom: 2rem;
 }
 
-nav.sidebar {
+div.sidebar {
   width: 150px;
   display: flex;
   flex-direction: column;
@@ -43,6 +43,12 @@ nav.sidebar {
   background-color: lightslategray;
   border-radius: 2px;
   padding: 0.4rem;
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 
   a {
     padding: 0.3rem;

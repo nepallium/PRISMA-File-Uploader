@@ -1,7 +1,25 @@
-<nav class="sidebar">
-   <% if (locals.folders) { %>
+<div class="sidebar">
+  <button onclick="createFolderModal.showModal()">Create folder</button>
+  <dialog id="createFolderModal" class="modal">
+    <h3>New Folder</h3>
+    <%- include('errors') %>
+    <form action="/folder/create" method="post">
+      <label for="folderName">Folder Name</label>
+      <input type="text" name="folderName" id="folderName" required />
+
+      <div class="actions">
+        <button type="button" onclick="createFolderModal.close()">
+          Cancel
+        </button>
+        <button type="submit">Add</button>
+      </div>
+    </form>
+  </dialog>
+  <nav>
+    <% if (locals.folders) { %>
     <% folders.forEach(folder => { %>
-     <a href="/folder/<%= folder.folderName %>"><%= folder.folderName %></a>
-    <% }) %> 
-   <% } %>
-</nav>
+    <a href="/folder/<%= folder.folderName %>"><%= folder.folderName %></a>
+    <% }) %>
+    <% } %>
+  </nav>
+</div>

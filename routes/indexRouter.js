@@ -4,14 +4,16 @@ import * as folderController from "../controllers/folderController.js";
 
 const router = new Router();
 
-router.get("/", async (req, res) => {
-  req.params.folderName = "/";
-  folderController.loadNavFolders(req, res);
-  folderController.showOneFolder(req, res);
-});
+router.get(
+  "/",
+  // set root folder name then run the folder middlewares
+  (req, res, next) => {
+    req.params.folderName = "/";
+    next();
+  },
+  folderController.loadNavFolders,
+  folderController.showOneFolder,
+);
 
 router.post("/uploadFile", fileController.uploadFile);
-
-router.post("/createFolder", fileController.createFolder);
-
 export default router;
