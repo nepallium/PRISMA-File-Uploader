@@ -1,66 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>File Uploader</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <title>File Uploader</title>
-</head>
+  <body>
+    <%- include('partials/header.ejs') %>
+    <main>
+      <% if (locals.currentUser) { %>
+      <%- include('partials/sidebar.ejs') %>
+      <div class="content">
+        <button onclick="createFolderModal.showModal()">Create folder</button>
+        <dialog id="createFolderModal" class="modal">
+          <h3>New Folder</h3>
+          <%- include('partials/errors') %>
+          <form action="/createFolder" method="post">
+            <label for="folderName">Folder Name</label>
+            <input type="text" name="folderName" id="folderName" required />
 
-<body>
-  <%- include('partials/header.ejs') %>
-  <% if (locals.currentUser) { %>
-  <button onclick="createFolderModal.showModal()">Create folder</button>
-  <dialog id="createFolderModal" class="modal">
-    <h3>New Folder</h3>
-    <%- include('partials/errors') %>
-    <form action="/createFolder" method="post">
-      <label for="folderName">Folder Name</label>
-      <input type="text" name="folderName" id="folderName" required>
+            <div class="actions">
+              <button type="button" onclick="createFolderModal.close()">
+                Cancel
+              </button>
+              <button type="submit">Add</button>
+            </div>
+          </form>
+        </dialog>
 
-      <div class="actions">
-        <button type="button" onclick="createFolderModal.close()">Cancel</button>
-        <button type="submit">Add</button>
+        <form action="/uploadFile" enctype="multipart/form-data" method="post">
+          <input type="file" name="uploadedFile" id="uploadedFile" required />
+          <button type="submit">Upload</button>
+        </form>
+
+        <%- include('partials/files.ejs') %>
+
+        <% } else { %>
+        Please <a href="/signup">Sign up</a> or <a href="/login">Log in</a>
+        <% } %>
       </div>
-    </form>
-  </dialog>
+    </main>
+    <script>
+      const folderForm = document.querySelector("#createFolderModal form");
+      const errorContainer = document.querySelector(".errors");
 
-  <form action="/uploadFile" enctype="multipart/form-data" method="post">
-    <input type="file" name="uploadedFile" id="uploadedFile" required>
-    <button type="submit">Upload</button>
-  </form>
-  <% } else { %>
-  Please <a href="/signup">Sign up</a> or <a href="/login">Log in</a>
-  <% } %>
-  <script>
-    const folderForm = document.querySelector("#createFolderModal form")
-    const errorContainer = document.querySelector(".errors");
+      folderForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-    folderForm.addEventListener("submit", async (e) => {
-      e.preventDefault()
+        const formData = new FormData(folderForm);
+        const data = Object.fromEntries(formData.entries());
 
-      const formData = new FormData(folderForm);
-      const data = Object.fromEntries(formData.entries())
+        const resp = await fetch("/createFolder", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
 
-      const resp = await fetch('/createFolder', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
-
-      if (resp.ok) {
-        window.location.reload();
-      } else {
-        const result = await resp.json()
-        errorContainer.textContent = result.error;
-        errorContainer.style.display = 'block';
-      }
-    })
-  </script>
-
-</body>
-
+        if (resp.ok) {
+          window.location.reload();
+        } else {
+          const result = await resp.json();
+          errorContainer.textContent = result.error;
+          errorContainer.style.display = "block";
+        }
+      });
+    </script>
+  </body>
 </html>

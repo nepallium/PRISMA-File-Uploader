@@ -1,0 +1,7 @@
+<nav class="sidebar">
+   <% if (locals.folders) { %>
+    <% folders.forEach(folder => { %>
+     <a href="/folder/<%= folder.folderName %>"><%= folder.folderName %></a>
+    <% }) %> 
+   <% } %>
+</nav>

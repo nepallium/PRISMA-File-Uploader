@@ -1,14 +1,17 @@
 import { Router } from "express";
-import * as controller from "../controllers/fileController.js"
+import * as fileController from "../controllers/fileController.js";
+import * as folderController from "../controllers/folderController.js";
 
-const router = new Router()
+const router = new Router();
 
-router.get("/", (req, res) => {
-    res.render("index")
-})
+router.get("/", async (req, res) => {
+  req.params.folderName = "/";
+  folderController.loadNavFolders(req, res);
+  folderController.showOneFolder(req, res);
+});
 
-router.post("/uploadFile", controller.uploadFile)
+router.post("/uploadFile", fileController.uploadFile);
 
-router.post("/createFolder", controller.createFolder)
+router.post("/createFolder", fileController.createFolder);
 
-export default router
+export default router;

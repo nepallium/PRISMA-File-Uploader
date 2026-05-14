@@ -2,29 +2,52 @@ import prisma from "../config/prisma.js";
 
 export async function createUser(formData) {
   const user = prisma.user.create({
-    data: formData
-  })
+    data: formData,
+  });
 
-  return user
+  return user;
 }
 
 export async function isEmailAvailable(value) {
   const count = await prisma.user.count({
-    where: {email: value}
-  })
+    where: { email: value },
+  });
 
   if (count > 0) {
     throw Error;
   }
 
-  return true
+  return true;
 }
 
 export async function createFolder(data) {
   const folder = await prisma.folder.create({
-        data: {
-            folderName: data.folderName,
-            ownerId: data.ownerId
-        }
-    })
+    data: {
+      folderName: data.folderName,
+      ownerId: data.ownerId,
+    },
+  });
+}
+
+export async function getAllFolders() {
+  const folders = await prisma.folder.findMany();
+  return folders;
+}
+
+export async function getOneFolder(data) {
+  const folder = await prisma.folder.upsert({
+    where: {
+      ownerId_folderName: {
+        ownerId: data.ownerId,
+        folderName: data.folderName,
+      },
+    },
+    update: {},
+    create: {
+      ownerId: data.ownerId,
+      folderName: data.folderName,
+    },
+  });
+
+  return folder;
 }
