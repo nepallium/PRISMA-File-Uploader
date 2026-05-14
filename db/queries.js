@@ -30,7 +30,10 @@ export async function createFolder(data) {
 }
 
 export async function getAllFolders() {
-  const folders = await prisma.folder.findMany();
+  const folders = await prisma.folder.findMany({
+    orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
+  });
+
   return folders;
 }
 
@@ -46,6 +49,7 @@ export async function getOneFolder(data) {
     create: {
       ownerId: data.ownerId,
       folderName: data.folderName,
+      priority: 1,
     },
   });
 

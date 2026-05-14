@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Folder" ADD COLUMN     "priority" INTEGER NOT NULL DEFAULT 0;

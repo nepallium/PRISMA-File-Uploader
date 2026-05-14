@@ -31,6 +31,7 @@ model User {
 
 model Folder {
   folderId   String   @id @default(uuid())
+  priority   Int      @default(0) // 1 for root, 0 for others
   folderName String
   createdAt  DateTime @default(now())
   owner      User     @relation(fields: [ownerId], references: [userId])
