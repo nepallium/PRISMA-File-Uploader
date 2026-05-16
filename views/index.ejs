@@ -1,118 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/style.css" />
-    <title>File Uploader</title>
-  </head>
 
-  <body>
-    <%- include('partials/header.ejs') %>
-    <main>
-      <% if (locals.currentUser) { %>
-      <%- include('partials/sidebar.ejs') %>
-      <div class="content">
-        <div class="options">
-          <% if (selectedFolder.folderName !== "/") { %>
-          <form
-            action="/folder/delete/<%= selectedFolder.folderId %>"
-            method="post"
-          >
-            <button
-              type="submit"
-              onclick="
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css" />
+  <title>File Uploader</title>
+</head>
+
+<body>
+  <%- include('partials/header.ejs') %>
+  <main>
+    <% if (locals.currentUser) { %>
+    <%- include('partials/sidebar.ejs') %>
+    <div class="content">
+      <div class="options">
+        <% if (selectedFolder.folderName !== "/") { %>
+        <form action="/folder/delete/<%= selectedFolder.folderId %>" method="post">
+          <button type="submit" onclick="
                 confirm(
                   'Are you sure you want to delete this folder and all of its content?',
                 )
-              "
-            >
-              Delete folder
-            </button>
-          </form>
-
-          <button onclick="updateFolderModal.showModal()">
-            Update folder name
+              ">
+            Delete folder
           </button>
-          <dialog id="updateFolderModal" class="modal">
-            <h3>Update Folder</h3>
-            <%- include('partials/errors') %>
-            <form
-              action="/folder/update/<%= selectedFolder.folderId %>"
-              method="post"
-            >
-              <label for="folderName">Folder Name</label>
-              <input
-                type="text"
-                value="<%= selectedFolder.folderName %>"
-                name="folderName"
-                id="folderName"
-                required
-              />
+        </form>
 
-              <div class="actions">
-                <button type="button" onclick="updateFolderModal.close()">
-                  Cancel
-                </button>
-                <button type="submit">Update</button>
-              </div>
-            </form>
-          </dialog>
-          <% } %>
+        <button onclick="updateFolderModal.showModal()">
+          Update folder name
+        </button>
+        <dialog id="updateFolderModal" class="modal">
+          <h3>Update Folder</h3>
+          <%- include('partials/errors') %>
+          <form action="/folder/update/<%= selectedFolder.folderId %>" method="post">
+            <label for="folderName">Folder Name</label>
+            <input type="text" value="<%= selectedFolder.folderName %>" name="folderName" id="folderName" required />
 
-          <form
-            action="/uploadFile"
-            enctype="multipart/form-data"
-            method="post"
-          >
-            <input type="file" name="uploadedFile" id="uploadedFile" required />
-            <button type="submit">Upload</button>
+            <div class="actions">
+              <button type="button" onclick="updateFolderModal.close()">
+                Cancel
+              </button>
+              <button type="submit">Update</button>
+            </div>
           </form>
-        </div>
-
-        <%- include('partials/files.ejs') %>
-
-        <% } else { %>
-        Please <a href="/signup">Sign up</a> or <a href="/login">Log in</a>
+        </dialog>
         <% } %>
+
+        <form action="/uploadFile" enctype="multipart/form-data" method="post">
+          <input type="file" name="uploadedFile" id="uploadedFile" required />
+          <button type="submit">Upload</button>
+        </form>
       </div>
-    </main>
-    <script>
-      const folderForms = document.querySelectorAll(
-        "#createFolderModal form, #updateFolderModal form",
-      );
-      const errorContainer = document.querySelector(".errors");
 
-      folderForms.forEach((form) => {
-        form.addEventListener("submit", async (e) => {
-          e.preventDefault();
+      <%- include('partials/files.ejs') %>
 
-          const formData = new FormData(form);
-          const data = Object.fromEntries(formData.entries());
+      <% } else { %>
+      Please <a href="/signup">Sign up</a> or <a href="/login">Log in</a>
+      <% } %>
+    </div>
+  </main>
+  <script>
+    const folderForms = document.querySelectorAll(
+      "#createFolderModal form, #updateFolderModal form",
+    );
+    const errorContainer = document.querySelector(".errors");
 
-          const action = form.getAttribute("action");
+    folderForms.forEach((form) => {
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-          const resp = await fetch(action, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-          });
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
 
-          if (resp.ok) {
-            window.location.reload();
-          } else {
-            const result = await resp.json();
-            if (errorContainer) {
-              errorContainer.textContent = result.error || "An error occurred";
-              errorContainer.style.display = "block";
-            } else {
-              alert(result.error || "An error occurred");
-            }
-          }
+        const action = form.getAttribute("action");
+
+        const resp = await fetch(action, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
         });
+
+        if (resp.ok) {
+          window.location.replace(`/folder/${data.folderName}`);
+        } else {
+          const result = await resp.json();
+          if (errorContainer) {
+            errorContainer.textContent = result.error || "An error occurred";
+            errorContainer.style.display = "block";
+          } else {
+            alert(result.error || "An error occurred");
+          }
+        }
       });
-    </script>
-  </body>
+    });
+  </script>
+</body>
+
 </html>

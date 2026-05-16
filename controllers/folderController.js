@@ -2,6 +2,10 @@ import * as db from "../db/queries.js";
 import { Prisma } from "../generated/prisma/index.js";
 
 export async function showOneFolder(req, res) {
+  if (!req.user) {
+    return res.render("index");
+  }
+
   const folderName = req.params.folderName;
   const ownerId = req.user.userId;
   const folder = await db.getOneFolder({ ownerId, folderName });
