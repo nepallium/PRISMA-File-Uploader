@@ -32,7 +32,7 @@
         <dialog id="updateFolderModal" class="modal">
           <h3>Update Folder</h3>
           <%- include('partials/errors') %>
-          <form action="/folder/update/<%= selectedFolder.folderId %>" method="post">
+          <form action="/folder/update/<%= selectedFolder.folderId %>" method="post" id="update">
             <label for="folderName">Folder Name</label>
             <input type="text" value="<%= selectedFolder.folderName %>" name="folderName" id="folderName" required />
 
@@ -60,10 +60,20 @@
     </div>
   </main>
   <script>
+    // clear error msg on dialog open
+    const dialogs = document.querySelectorAll("dialog");
+    dialogs.forEach(dialog => {
+      dialog.addEventListener("close", (e) => {
+        const errorContainer = dialog.querySelector(".errors")
+        if (errorContainer) errorContainer.textContent = ""
+      })
+    })
+
     const folderForms = document.querySelectorAll(
       "#createFolderModal form, #updateFolderModal form",
     );
-    const errorContainer = document.querySelector(".errors");
+    const createErrorContainer = document.querySelector("#createFolderModal .errors");
+    const updateErrorContainer = document.querySelector("#updateFolderModal .errors");
 
     folderForms.forEach((form) => {
       form.addEventListener("submit", async (e) => {
@@ -86,6 +96,7 @@
           window.location.replace(`/folder/${data.folderName}`);
         } else {
           const result = await resp.json();
+          const errorContainer = form.id === "update" ? updateErrorContainer : createErrorContainer
           if (errorContainer) {
             errorContainer.textContent = result.error || "An error occurred";
             errorContainer.style.display = "block";
