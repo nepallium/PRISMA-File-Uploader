@@ -14,6 +14,7 @@
     <% if (locals.currentUser) { %>
     <%- include('partials/sidebar.ejs') %>
     <div class="content">
+      <h3><%= selectedFolder.folderName %></h3>
       <div class="options">
         <% if (selectedFolder.folderName !== "/") { %>
         <form action="/folder/delete/<%= selectedFolder.folderId %>" method="post">

@@ -18,7 +18,11 @@
   <nav>
     <% if (locals.folders) { %>
     <% folders.forEach(folder => { %>
-    <a href="/folder/<%= folder.folderName %>"><%= folder.folderName %></a>
+    <a href="/folder/<%= folder.folderName %>" class="<% if (folder.folderName === selectedFolder.folderName) { %>
+       selectedFolder
+      <% } %>">
+      <%= folder.folderName %>
+    </a>
     <% }) %>
     <% } %>
   </nav>

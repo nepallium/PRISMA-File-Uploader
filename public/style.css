@@ -54,4 +54,8 @@ nav {
     padding: 0.3rem;
     background-color: lightgray;
   }
+
+  a.selectedFolder {
+    background-color: beige;
+  }
 }
