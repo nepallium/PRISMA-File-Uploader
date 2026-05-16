@@ -15,5 +15,4 @@ router.get(
   folderController.showOneFolder,
 );
 
-router.post("/uploadFile", fileController.uploadFile);
 export default router;
