@@ -47,7 +47,11 @@
         </dialog>
         <% } %>
 
-        <form action="/uploadFile" enctype="multipart/form-data" method="post">
+        <form action="/file/upload" enctype="multipart/form-data" method="post">
+          <% if (selectedFolder) { %>
+          <input type="hidden" name="folderId" value="<%= selectedFolder.folderId %>" />
+          <input type="hidden" name="folderName" value="<%= selectedFolder.folderName %>" />
+          <% } %>
           <input type="file" name="uploadedFile" id="uploadedFile" required />
           <button type="submit">Upload</button>
         </form>

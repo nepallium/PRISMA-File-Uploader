@@ -45,12 +45,22 @@ export async function getOneFolder(data) {
         folderName: data.folderName,
         priority: 1,
       },
+      include: {
+        files: {
+          orderBy: { uploadedAt: "desc" },
+        },
+      },
     });
   } else {
     folder = await prisma.folder.findFirst({
       where: {
         ownerId: data.ownerId,
         folderName: data.folderName,
+      },
+      include: {
+        files: {
+          orderBy: { uploadedAt: "desc" },
+        },
       },
     });
   }

@@ -59,9 +59,11 @@ app.use((req, res, next) => {
 import indexRouter from "./routes/indexRouter.js";
 import authRouter from "./routes/authRouter.js";
 import folderRouter from "./routes/folderRouter.js";
+import fileRouter from "./routes/fileRouter.js";
 app.use(indexRouter);
 app.use(authRouter);
-app.use('/folder', folderRouter);
+app.use("/folder", folderRouter);
+app.use("/file", fileRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, (error) => {

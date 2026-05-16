@@ -1,5 +1,6 @@
 import * as db from "../db/queries.js";
 import { Prisma } from "../generated/prisma/index.js";
+import { formatDate } from "../utils/formatDate.js";
 
 export async function showOneFolder(req, res) {
   if (!req.user) {
@@ -10,7 +11,15 @@ export async function showOneFolder(req, res) {
   const ownerId = req.user.userId;
   const folder = await db.getOneFolder({ ownerId, folderName });
 
-  res.render("index", { selectedFolder: folder, files: folder.files });
+  if (!folder) {
+    return res.redirect("/");
+  }
+
+  const files = (folder.files ?? []).map((file) => ({
+    ...file,
+    uploadedAt: formatDate(file.uploadedAt),
+  }));
+  res.render("index", { selectedFolder: folder, files });
 }
 
 export async function loadNavFolders(req, res, next) {

@@ -1,10 +1,15 @@
 <div class="files">
-    <% if (locals.files) { %>
-        <% files.forEach(file => { %>
-         <div class="file">
-            <%= file.fileName %>
-            <%= file.uploadedAt %>
-        </div>
-        <% }) %>
-    <% } %>
+  <% if (Array.isArray(files) && files.length > 0) { %>
+  <% files.forEach(file => { %>
+  <div class="file">
+    <div class="file__name"><%= file.fileName %></div>
+    <form action="/file/download/<%= file.fileId %>" method="post" class="file__action">
+      <button type="submit">Download</button>
+    </form>
+    <div class="file__date"><%= file.uploadedAt %></div>
+  </div>
+  <% }) %>
+  <% } else { %>
+  <div class="file empty">No files yet.</div>
+  <% } %>
 </div>
